@@ -1,0 +1,96 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class HotelBookingSystem {
+    public static void main(String[] args) {
+        // Create the main frame
+        JFrame frame = new JFrame("Hotel Booking System");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 500);
+        frame.setLayout(new GridLayout(7, 1));
+
+        // Welcome label
+        JLabel welcomeLabel = new JLabel("Welcome to XYZ Hotel Booking", JLabel.CENTER);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        frame.add(welcomeLabel);
+
+        // Name input
+        JPanel namePanel = new JPanel();
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField(20);
+        namePanel.add(nameLabel);
+        namePanel.add(nameField);
+        frame.add(namePanel);
+
+        // Room type selection
+        JPanel roomPanel = new JPanel();
+        JLabel roomLabel = new JLabel("Select Room Type:");
+        String[] roomTypes = {"Single - ₹50", "Double - ₹90", "Suite - ₹150"};
+        JComboBox<String> roomComboBox = new JComboBox<>(roomTypes);
+        roomPanel.add(roomLabel);
+        roomPanel.add(roomComboBox);
+        frame.add(roomPanel);
+
+        // Days input
+        JPanel daysPanel = new JPanel();
+        JLabel daysLabel = new JLabel("Number of Days:");
+        JTextField daysField = new JTextField(5);
+        daysPanel.add(daysLabel);
+        daysPanel.add(daysField);
+        frame.add(daysPanel);
+
+        // Calculate price button and display
+        JButton calculateButton = new JButton("Calculate Total Price");
+        JLabel totalPriceLabel = new JLabel("", JLabel.CENTER);
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String roomType = (String) roomComboBox.getSelectedItem();
+                int pricePerNight = 0;
+                if (roomType != null) {
+                    if (roomType.contains("Single")) pricePerNight = 50;
+                    else if (roomType.contains("Double")) pricePerNight = 90;
+                    else if (roomType.contains("Suite")) pricePerNight = 150;
+                }
+
+                try {
+                    int days = Integer.parseInt(daysField.getText());
+                    int totalPrice = pricePerNight * days;
+                    totalPriceLabel.setText("Total Price: ₹" + totalPrice);
+                } catch (NumberFormatException ex) {
+                    totalPriceLabel.setText("Please enter valid days.");
+                }
+            }
+        });
+        frame.add(calculateButton);
+        frame.add(totalPriceLabel);
+
+        // Confirm booking button
+        JButton confirmButton = new JButton("Confirm Booking");
+        confirmButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText();
+                String roomType = (String) roomComboBox.getSelectedItem();
+                String days = daysField.getText();
+
+                if (name.isEmpty() || days.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "Please fill all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(frame,
+                            "Booking Confirmed!\nName: " + name +
+                                    "\nRoom Type: " + roomType +
+                                    "\nDays: " + days,
+                            "Booking Confirmation",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+        frame.add(confirmButton);
+
+        // Make the frame visible
+        frame.setVisible(true);
+    }
+}
